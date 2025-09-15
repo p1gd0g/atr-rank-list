@@ -40,12 +40,16 @@ class ETF {
           ..open = cs.open
           ..high = cs.high
           ..low = cs.low
-          ..close = cs.close;
+          ..close = cs.close
+          ..closeTimestamp = cs.timestamp;
       } else {
         var dayCs = dayMap[dayStr]!;
         dayCs.high = (dayCs.high! < cs.high!) ? cs.high : dayCs.high;
         dayCs.low = (dayCs.low! > cs.low!) ? cs.low : dayCs.low;
-        dayCs.close = cs.close;
+        if (cs.timestamp! > dayCs.closeTimestamp!) {
+          dayCs.close = cs.close;
+          dayCs.closeTimestamp = cs.timestamp;
+        }
       }
     }
     _csDay = dayMap.values.toList()
@@ -93,6 +97,8 @@ class Candlestick {
   double? high;
   double? low;
   double? close;
+
+  int? closeTimestamp;
 
   Candlestick();
 
