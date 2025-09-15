@@ -2,13 +2,16 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:myapp/cons/pb.dart';
 import 'package:myapp/firebase_options.dart';
+import 'package:myapp/views/grid.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'dart:developer' as developer;
 
 import 'package:stack_trace/stack_trace.dart';
 
-const String appName = 'ATR rank list';
+const String appName = 'ATR Rank List';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +21,8 @@ void main() {
   ) {
     FirebaseAnalytics.instance.logAppOpen();
   });
+
+  var pbc = Get.put(PBC());
 
   runApp(
     GetMaterialApp(
@@ -33,6 +38,22 @@ void main() {
       },
       title: appName,
       theme: FlexThemeData.light(scheme: FlexScheme.purpleBrown),
+      home: Scaffold(
+        appBar: AppBar(title: const Text('ETF 波动率排名')),
+        body: FutureBuilder(
+          future: pbc.getETFs(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              final etfs = snapshot.data!;
+              return DataGrid(etfs: etfs);
+            }
+          },
+        ),
+      ),
     ),
   );
 }
