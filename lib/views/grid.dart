@@ -12,6 +12,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 const collName = 'symbol';
 const collPrice = 'price';
 const collATR = 'atr';
+const collATRPercent = 'atr%';
 
 class DataGrid extends StatelessWidget {
   const DataGrid({super.key, required this.etfs});
@@ -48,6 +49,14 @@ class DataGrid extends StatelessWidget {
             child: const Text('ATR'),
           ),
         ),
+        GridColumn(
+          columnName: collATRPercent,
+          label: Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.centerLeft,
+            child: const Text('ATR%'),
+          ),
+        ),
       ],
       source: EtfDataSource(etfs),
     );
@@ -60,23 +69,22 @@ class EtfDataSource extends DataGridSource {
   final List<ETF> etfs;
 
   @override
-  List<DataGridRow> get rows => etfs
-      .map<DataGridRow>(
-        (dataRow) => DataGridRow(
-          cells: [
-            DataGridCell<String>(columnName: collName, value: dataRow.symbol),
-            DataGridCell<String>(
-              columnName: collPrice,
-              value: dataRow.cs1000Hour!.last.close.toString(),
-            ),
-            DataGridCell(
-              columnName: collATR,
-              value: dataRow.getATR(Period.day, 14).toStringAsFixed(4),
-            ),
-          ],
+  List<DataGridRow> get rows => etfs.map<DataGridRow>((dataRow) {
+    var price = dataRow.cs1000Day?.last.close ?? 0.0;
+    var atr = dataRow.getATR(Period.day, 14);
+    var atrPercent = (price == 0.0) ? 0.0 : atr / price * 100;
+    return DataGridRow(
+      cells: [
+        DataGridCell<String>(columnName: collName, value: dataRow.symbol),
+        DataGridCell<String>(columnName: collPrice, value: price.toString()),
+        DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
+        DataGridCell(
+          columnName: collATRPercent,
+          value: '${atrPercent.toStringAsFixed(2)}%',
         ),
-      )
-      .toList();
+      ],
+    );
+  }).toList();
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {

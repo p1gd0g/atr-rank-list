@@ -26,6 +26,7 @@ void main() {
 
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       logWriterCallback: (value, {isError = false}) {
         // void defaultLogWriterCallback(String value, {bool isError = false}) {
         if (isError || Get.isLogEnable) {
@@ -39,7 +40,29 @@ void main() {
       title: appName,
       theme: FlexThemeData.light(scheme: FlexScheme.purpleBrown),
       home: Scaffold(
-        appBar: AppBar(title: const Text('ETF 波动率排名')),
+        appBar: AppBar(
+          title: const Text('ETF 波动率排名'),
+          actions: [
+            DropdownButton(
+              alignment: Alignment.center,
+              value: 14,
+              items: [
+                DropdownMenuItem(value: 14, child: Text('14')),
+                DropdownMenuItem(value: 28, child: Text('28')),
+              ],
+              onChanged: (value) {},
+            ),
+            DropdownButton(
+              alignment: Alignment.center,
+              value: 1000,
+              items: [
+                DropdownMenuItem(value: 1000, child: Text('Day')),
+                DropdownMenuItem(value: 60, child: Text('Hour')),
+              ],
+              onChanged: (value) {},
+            ),
+          ],
+        ),
         body: FutureBuilder(
           future: pbc.getETFs(),
           builder: (context, snapshot) {

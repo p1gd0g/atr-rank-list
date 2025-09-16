@@ -1,13 +1,14 @@
 const field_id = 'id';
 const field_symbol = 'symbol';
 const field_cs1000Hour = 'cs_1000_hour';
+const field_cs1000Day = 'cs_1000_day';
 
 class ETF {
   String? id;
   String? symbol;
 
   List<Candlestick>? cs1000Hour;
-  List<Candlestick>? _csDay;
+  List<Candlestick>? cs1000Day;
 
   ETF.fromMap(Map<String, dynamic> map) {
     id = map[field_id];
@@ -17,45 +18,11 @@ class ETF {
           .map((e) => Candlestick.fromMap(e))
           .toList();
     }
-  }
-
-  List<Candlestick> get csDay {
-    if (_csDay != null) {
-      return _csDay!;
+    if (map[field_cs1000Day] != null) {
+      cs1000Day = (map[field_cs1000Day] as List)
+          .map((e) => Candlestick.fromMap(e))
+          .toList();
     }
-    if (cs1000Hour == null) {
-      return [];
-    }
-    var dayMap = <String, Candlestick>{};
-    for (var cs in cs1000Hour!) {
-      var dayStr = '${cs.time!.year}-${cs.time!.month}-${cs.time!.day}';
-      if (!dayMap.containsKey(dayStr)) {
-        dayMap[dayStr] = Candlestick()
-          ..time = DateTime(cs.time!.year, cs.time!.month, cs.time!.day)
-          ..timestamp = DateTime(
-            cs.time!.year,
-            cs.time!.month,
-            cs.time!.day,
-          ).millisecondsSinceEpoch
-          ..open = cs.open
-          ..high = cs.high
-          ..low = cs.low
-          ..close = cs.close
-          ..closeTimestamp = cs.timestamp;
-      } else {
-        var dayCs = dayMap[dayStr]!;
-        dayCs.high = (dayCs.high! < cs.high!) ? cs.high : dayCs.high;
-        dayCs.low = (dayCs.low! > cs.low!) ? cs.low : dayCs.low;
-        if (cs.timestamp! > dayCs.closeTimestamp!) {
-          dayCs.close = cs.close;
-          dayCs.closeTimestamp = cs.timestamp;
-        }
-      }
-    }
-    _csDay = dayMap.values.toList()
-      ..sort((a, b) => a.timestamp!.compareTo(b.timestamp!))
-      ..sublist(1); // remove the first one, which may be incomplete
-    return _csDay!;
   }
 
   double getATR(Period period, int length) {
@@ -66,10 +33,10 @@ class ETF {
       }
       csList = cs1000Hour!;
     } else {
-      if (csDay.length < length + 1) {
+      if (cs1000Day == null || cs1000Day!.length < length + 1) {
         return 0.0;
       }
-      csList = csDay;
+      csList = cs1000Day!;
     }
 
     double atr = 0.0;
@@ -97,8 +64,6 @@ class Candlestick {
   double? high;
   double? low;
   double? close;
-
-  int? closeTimestamp;
 
   Candlestick();
 
