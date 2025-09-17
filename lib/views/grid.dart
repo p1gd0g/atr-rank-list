@@ -1,12 +1,8 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/instance_manager.dart';
 import 'package:myapp/cons/data.dart';
-import 'package:myapp/cons/pb.dart';
-import 'package:myapp/firebase_options.dart';
-import 'package:myapp/views/grid.dart';
+import 'package:myapp/cons/mgr.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 const collName = 'symbol';
@@ -21,62 +17,79 @@ class DataGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SfDataGrid(
-      allowSorting: true,
-      columnWidthMode: ColumnWidthMode.fill,
-      columns: [
-        GridColumn(
-          columnName: collName,
-          label: Container(
-            padding: const EdgeInsets.all(8.0),
-            alignment: Alignment.centerLeft,
-            child: const Text('ETF'),
+    var mgr = Get.put(Mgr());
+    return Obx(() {
+      return SfDataGrid(
+        allowSorting: true,
+        columnWidthMode: ColumnWidthMode.fill,
+        columns: [
+          GridColumn(
+            columnName: collName,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: const Text('ETF'),
+            ),
           ),
-        ),
-        GridColumn(
-          columnName: collPrice,
-          label: Container(
-            padding: const EdgeInsets.all(8.0),
-            alignment: Alignment.centerLeft,
-            child: const Text('价格'),
+          GridColumn(
+            columnName: collPrice,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: const Text('价格'),
+            ),
           ),
-        ),
-        GridColumn(
-          columnName: collATR,
-          label: Container(
-            padding: const EdgeInsets.all(8.0),
-            alignment: Alignment.centerLeft,
-            child: const Text('ATR'),
+          GridColumn(
+            columnName: collATR,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: const Text('ATR'),
+            ),
           ),
-        ),
-        GridColumn(
-          columnName: collATRPercent,
-          label: Container(
-            padding: const EdgeInsets.all(8.0),
-            alignment: Alignment.centerLeft,
-            child: const Text('ATR%'),
+          GridColumn(
+            columnName: collATRPercent,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.centerLeft,
+              child: const Text('ATR%'),
+            ),
           ),
+        ],
+        source: EtfDataSource(
+          etfs,
+          mgr.periodUnit.value,
+          mgr.periodLength.value,
         ),
-      ],
-      source: EtfDataSource(etfs),
-    );
+      );
+    });
   }
 }
 
 class EtfDataSource extends DataGridSource {
-  EtfDataSource(this.etfs);
+  EtfDataSource(this.etfs, this.periodUnit, this.periodLength);
 
   final List<ETF> etfs;
+  final Period periodUnit;
+  final int periodLength;
 
   @override
   List<DataGridRow> get rows => etfs.map<DataGridRow>((dataRow) {
-    var price = dataRow.cs1000Day?.last.close ?? 0.0;
-    var atr = dataRow.getATR(Period.day, 14);
-    var atrPercent = (price == 0.0) ? 0.0 : atr / price * 100;
+    // var mgr = Get.put(Mgr());
+    var basePrice = periodUnit == Period.day
+        ? (dataRow.cs1000Day?.last.close ?? 0.0)
+        : (dataRow.cs1000Hour?.last.close ?? 0.0);
+
+    var atr = dataRow.getATR(periodUnit, periodLength);
+    var atrPercent = (basePrice == 0.0) ? 0.0 : atr / basePrice * 100;
+
     return DataGridRow(
       cells: [
         DataGridCell<String>(columnName: collName, value: dataRow.symbol),
-        DataGridCell<String>(columnName: collPrice, value: price.toString()),
+        DataGridCell<String>(
+          columnName: collPrice,
+          value: basePrice.toString(),
+        ),
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
         DataGridCell(
           columnName: collATRPercent,

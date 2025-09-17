@@ -3,10 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/cons/data.dart';
+import 'package:myapp/cons/mgr.dart';
 import 'package:myapp/cons/pb.dart';
 import 'package:myapp/firebase_options.dart';
 import 'package:myapp/views/grid.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'dart:developer' as developer;
 
 import 'package:stack_trace/stack_trace.dart';
@@ -23,6 +24,7 @@ void main() {
   });
 
   var pbc = Get.put(PBC());
+  var mgr = Get.put(Mgr());
 
   runApp(
     GetMaterialApp(
@@ -43,23 +45,31 @@ void main() {
         appBar: AppBar(
           title: const Text('ETF 波动率排名'),
           actions: [
-            DropdownButton(
-              alignment: Alignment.center,
-              value: 14,
-              items: [
-                DropdownMenuItem(value: 14, child: Text('14')),
-                DropdownMenuItem(value: 28, child: Text('28')),
-              ],
-              onChanged: (value) {},
+            Obx(
+              () => DropdownButton(
+                alignment: Alignment.center,
+                value: mgr.periodLength.value,
+                items: [
+                  DropdownMenuItem(value: 14, child: Text('14')),
+                  DropdownMenuItem(value: 28, child: Text('28')),
+                ],
+                onChanged: (value) {
+                  mgr.periodLength.value = value!;
+                },
+              ),
             ),
-            DropdownButton(
-              alignment: Alignment.center,
-              value: 1000,
-              items: [
-                DropdownMenuItem(value: 1000, child: Text('Day')),
-                DropdownMenuItem(value: 60, child: Text('Hour')),
-              ],
-              onChanged: (value) {},
+            Obx(
+              () => DropdownButton(
+                alignment: Alignment.center,
+                value: mgr.periodUnit.value,
+                items: [
+                  DropdownMenuItem(value: Period.day, child: Text('Day')),
+                  DropdownMenuItem(value: Period.hour, child: Text('Hour')),
+                ],
+                onChanged: (value) {
+                  mgr.periodUnit.value = value!;
+                },
+              ),
             ),
           ],
         ),
