@@ -9,6 +9,7 @@ import 'package:myapp/cons/pb.dart';
 import 'package:myapp/firebase_options.dart';
 import 'package:myapp/views/grid.dart';
 import 'dart:developer' as developer;
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:stack_trace/stack_trace.dart';
 
@@ -42,6 +43,7 @@ void main() {
       title: appName,
       theme: FlexThemeData.light(scheme: FlexScheme.purpleBrown),
       home: Scaffold(
+        bottomSheet: Bottom(),
         appBar: AppBar(
           title: const Text('ETF 波动率排名'),
           actions: [
@@ -89,4 +91,27 @@ void main() {
       ),
     ),
   );
+}
+
+class Bottom extends StatelessWidget {
+  const Bottom({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton.icon(
+          onPressed: () => launchUrlString('https://www.p1gd0g.cc'),
+          label: Text('关注作者 @p1gd0g'),
+          icon: Icon(Icons.account_circle),
+        ),
+        TextButton.icon(
+          onPressed: () => launchUrlString('https://x.p1gd0g.cc'),
+          label: Text('Gridder 网格交易测试工具'),
+          icon: Icon(Icons.link),
+        ),
+      ],
+    );
+  }
 }
