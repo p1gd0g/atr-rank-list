@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/instance_manager.dart';
 import 'package:myapp/cons/data.dart';
 import 'package:myapp/cons/mgr.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -22,12 +21,13 @@ class DataGrid extends StatelessWidget {
       return SfDataGrid(
         allowSorting: true,
         columnWidthMode: ColumnWidthMode.fill,
+
         columns: [
           GridColumn(
             columnName: collName,
             label: Container(
               padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: const Text('ETF'),
             ),
           ),
@@ -35,7 +35,7 @@ class DataGrid extends StatelessWidget {
             columnName: collPrice,
             label: Container(
               padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: const Text('价格'),
             ),
           ),
@@ -43,7 +43,7 @@ class DataGrid extends StatelessWidget {
             columnName: collATR,
             label: Container(
               padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: const Text('ATR'),
             ),
           ),
@@ -51,7 +51,7 @@ class DataGrid extends StatelessWidget {
             columnName: collATRPercent,
             label: Container(
               padding: const EdgeInsets.all(8.0),
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: const Text('ATR%'),
             ),
           ),
@@ -83,9 +83,11 @@ class EtfDataSource extends DataGridSource {
     var atr = dataRow.getATR(periodUnit, periodLength);
     var atrPercent = (basePrice == 0.0) ? 0.0 : atr / basePrice * 100;
 
+    var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
+
     return DataGridRow(
       cells: [
-        DataGridCell<String>(columnName: collName, value: dataRow.symbol),
+        DataGridCell<String>(columnName: collName, value: name),
         DataGridCell<String>(
           columnName: collPrice,
           value: basePrice.toString(),
@@ -103,7 +105,9 @@ class EtfDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataCell) {
-        return Text(dataCell.value.toString());
+        return Center(
+          child: Text(dataCell.value.toString(), textAlign: TextAlign.center),
+        );
       }).toList(),
     );
   }

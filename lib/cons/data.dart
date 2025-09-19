@@ -1,11 +1,13 @@
 const field_id = 'id';
 const field_symbol = 'symbol';
+const field_name = 'name';
 const field_cs1000Hour = 'cs_1000_hour';
 const field_cs1000Day = 'cs_1000_day';
 
 class ETF {
   String? id;
   String? symbol;
+  String? name;
 
   List<Candlestick>? cs1000Hour;
   List<Candlestick>? cs1000Day;
@@ -13,6 +15,7 @@ class ETF {
   ETF.fromMap(Map<String, dynamic> map) {
     id = map[field_id];
     symbol = map[field_symbol];
+    name = map[field_name];
     if (map[field_cs1000Hour] != null) {
       cs1000Hour = (map[field_cs1000Hour] as List)
           .map((e) => Candlestick.fromMap(e))
