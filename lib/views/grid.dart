@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 const collName = 'symbol';
 const collPrice = 'price';
+const collTurnover = 'turnover';
 const collATR = 'atr';
 const collATRPercent = 'atr%';
 
@@ -37,6 +38,14 @@ class DataGrid extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text('价格'),
+            ),
+          ),
+          GridColumn(
+            columnName: collTurnover,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('成交额'),
             ),
           ),
           GridColumn(
@@ -83,6 +92,8 @@ class EtfDataSource extends DataGridSource {
     var atr = dataRow.getATR(periodUnit, periodLength);
     var atrPercent = (basePrice == 0.0) ? 0.0 : atr / basePrice * 100;
 
+    var turnover = dataRow.getTurnover(periodUnit, periodLength);
+
     var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
 
     return DataGridRow(
@@ -92,6 +103,7 @@ class EtfDataSource extends DataGridSource {
           columnName: collPrice,
           value: basePrice.toString(),
         ),
+        DataGridCell<double>(columnName: collTurnover, value: turnover),
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
         DataGridCell(
           columnName: collATRPercent,
@@ -105,6 +117,14 @@ class EtfDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataCell) {
+        if (dataCell.columnName == collTurnover) {
+          return Center(
+            child: Text(
+              '${(dataCell.value / 1e8).toStringAsFixed(2)}亿',
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
         return Center(
           child: Text(dataCell.value.toString(), textAlign: TextAlign.center),
         );

@@ -55,6 +55,29 @@ class ETF {
     }
     return atr / length;
   }
+
+  double getTurnover(Period period, int length) {
+    List<Candlestick> csList;
+    if (period == Period.hour) {
+      if (cs1000Hour == null || cs1000Hour!.isEmpty) {
+        return 0.0;
+      }
+      csList = cs1000Hour!;
+    } else {
+      if (cs1000Day == null || cs1000Day!.isEmpty) {
+        return 0.0;
+      }
+      csList = cs1000Day!;
+    }
+
+    double turnover = 0.0;
+    for (int i = csList.length - length; i < csList.length; i++) {
+      var cs = csList[i];
+      turnover += (cs.turnover ?? 0.0);
+    }
+
+    return turnover;
+  }
 }
 
 enum Period { hour, day }
@@ -67,6 +90,8 @@ class Candlestick {
   double? high;
   double? low;
   double? close;
+  double? turnover; // 成交额
+  double? volume; // 成交量
 
   Candlestick();
 
@@ -76,6 +101,8 @@ class Candlestick {
     high = double.tryParse(map['High'].toString());
     low = double.tryParse(map['Low'].toString());
     close = double.tryParse(map['Close'].toString());
+    turnover = double.tryParse(map['Turnover'].toString());
+    volume = double.tryParse(map['Volume'].toString());
     timestamp = map['Timestamp'];
     time = DateTime.fromMillisecondsSinceEpoch(timestamp! * 1000);
   }
