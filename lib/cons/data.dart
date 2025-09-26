@@ -3,19 +3,32 @@ const field_symbol = 'symbol';
 const field_name = 'name';
 const field_cs1000Hour = 'cs_1000_hour';
 const field_cs1000Day = 'cs_1000_day';
+const field_updated = 'updated';
+const field_t0 = 't0';
 
 class ETF {
   String? id;
   String? symbol;
   String? name;
+  String? updated;
+  bool? t0;
 
   List<Candlestick>? cs1000Hour;
   List<Candlestick>? cs1000Day;
+
+  late DateTime updateTime;
 
   ETF.fromMap(Map<String, dynamic> map) {
     id = map[field_id];
     symbol = map[field_symbol];
     name = map[field_name];
+    updated = map[field_updated];
+    t0 = map[field_t0];
+
+    updateTime = DateTime.parse(
+      updated ?? DateTime.utc(1970).toIso8601String(),
+    );
+
     if (map[field_cs1000Hour] != null) {
       cs1000Hour = (map[field_cs1000Hour] as List)
           .map((e) => Candlestick.fromMap(e))
@@ -80,7 +93,7 @@ class ETF {
   }
 }
 
-enum Period { hour, day }
+enum Period { minute, hour, day }
 
 class Candlestick {
   DateTime? time;

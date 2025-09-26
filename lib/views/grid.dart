@@ -9,6 +9,8 @@ const collPrice = 'price';
 const collTurnover = 'turnover';
 const collATR = 'atr';
 const collATRPercent = 'atr%';
+const collUpdateTime = 'updateTime';
+const collTPlus = 't0';
 
 class DataGrid extends StatelessWidget {
   const DataGrid({super.key, required this.etfs});
@@ -21,10 +23,18 @@ class DataGrid extends StatelessWidget {
     return Obx(() {
       return SfDataGrid(
         allowSorting: true,
-        columnWidthMode: ColumnWidthMode.fill,
+        frozenColumnsCount: 1,
+        allowMultiColumnSorting: true,
+        headerGridLinesVisibility: GridLinesVisibility.both,
+        gridLinesVisibility: GridLinesVisibility.both,
+        columnWidthMode: ColumnWidthMode.auto,
 
+        // isScrollbarAlwaysShown: true,
+        // showVerticalScrollbar: true,
+        // showHorizontalScrollbar: true,
         columns: [
           GridColumn(
+            width: 150,
             columnName: collName,
             label: Container(
               padding: const EdgeInsets.all(8.0),
@@ -32,6 +42,16 @@ class DataGrid extends StatelessWidget {
               child: const Text('ETF'),
             ),
           ),
+
+          GridColumn(
+            columnName: collTPlus,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('交收'),
+            ),
+          ),
+
           GridColumn(
             columnName: collPrice,
             label: Container(
@@ -62,6 +82,14 @@ class DataGrid extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               child: const Text('ATR%'),
+            ),
+          ),
+          GridColumn(
+            columnName: collUpdateTime,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('更新时间'),
             ),
           ),
         ],
@@ -100,6 +128,10 @@ class EtfDataSource extends DataGridSource {
       cells: [
         DataGridCell<String>(columnName: collName, value: name),
         DataGridCell<String>(
+          columnName: collTPlus,
+          value: (dataRow.t0 == true) ? 't+0' : 't+1',
+        ),
+        DataGridCell<String>(
           columnName: collPrice,
           value: basePrice.toString(),
         ),
@@ -109,6 +141,10 @@ class EtfDataSource extends DataGridSource {
           columnName: collATRPercent,
           value: '${atrPercent.toStringAsFixed(2)}%',
         ),
+        DataGridCell(
+          columnName: collUpdateTime,
+          value: dataRow.updateTime.toLocal().toString().split(' ').first,
+        ),
       ],
     );
   }).toList();
@@ -117,16 +153,23 @@ class EtfDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataCell) {
-        if (dataCell.columnName == collTurnover) {
-          return Center(
-            child: Text(
-              '${(dataCell.value / 1e8).toStringAsFixed(2)}亿',
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
+        var str = switch (dataCell.columnName) {
+          collTurnover => (dataCell.value / 1e8).toStringAsFixed(2) + '亿',
+          _ => dataCell.value.toString(),
+        };
+
+        var fontWeight = switch (dataCell.columnName) {
+          collATRPercent => FontWeight.bold,
+          collName => FontWeight.bold,
+          _ => FontWeight.normal,
+        };
+
         return Center(
-          child: Text(dataCell.value.toString(), textAlign: TextAlign.center),
+          child: Text(
+            str,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: fontWeight),
+          ),
         );
       }).toList(),
     );

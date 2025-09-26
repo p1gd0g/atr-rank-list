@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:stack_trace/stack_trace.dart';
 
-const String appName = 'ATR Rank List';
+const String appName = 'ATRX - ETF 波动率排名';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,10 +42,15 @@ void main() {
       },
       title: appName,
       theme: FlexThemeData.light(scheme: FlexScheme.purpleBrown),
+
       home: Scaffold(
-        bottomSheet: Bottom(),
+        bottomNavigationBar: Bottom(),
+        // bottomSheet: Bottom(),
         appBar: AppBar(
-          title: const Text('ETF 波动率排名'),
+          title: const Text(
+            'ATRX - ETF 波动率排名',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           actions: [
             Obx(
               () => DropdownButton(
@@ -56,6 +61,11 @@ void main() {
                   DropdownMenuItem(value: 4, child: Text('4')),
                   DropdownMenuItem(value: 14, child: Text('14')),
                   DropdownMenuItem(value: 28, child: Text('28')),
+                  DropdownMenuItem(
+                    value: 999,
+                    enabled: false,
+                    child: Text('999', style: TextStyle(color: Colors.grey)),
+                  ),
                 ],
                 onChanged: (value) {
                   mgr.periodLength.value = value!;
@@ -69,6 +79,11 @@ void main() {
                 items: [
                   DropdownMenuItem(value: Period.day, child: Text('Day')),
                   DropdownMenuItem(value: Period.hour, child: Text('Hour')),
+                  DropdownMenuItem(
+                    value: Period.minute,
+                    enabled: false,
+                    child: Text('Minute', style: TextStyle(color: Colors.grey)),
+                  ),
                 ],
                 onChanged: (value) {
                   mgr.periodUnit.value = value!;
@@ -108,6 +123,7 @@ class Bottom extends StatelessWidget {
           label: Text('关注作者 @p1gd0g'),
           icon: Icon(Icons.account_circle),
         ),
+        Text('不构成投资建议！', style: TextStyle(color: Colors.red)),
         TextButton.icon(
           onPressed: () => launchUrlString('https://x.p1gd0g.cc'),
           label: Text('Gridder 网格交易测试工具'),
