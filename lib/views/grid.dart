@@ -122,11 +122,14 @@ class EtfDataSource extends DataGridSource {
 
     var turnover = dataRow.getTurnover(periodUnit, periodLength);
 
-    var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
+    // var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
 
     return DataGridRow(
       cells: [
-        DataGridCell<String>(columnName: collName, value: name),
+        DataGridCell(
+          columnName: collName,
+          value: (dataRow.name, dataRow.symbol),
+        ),
         DataGridCell<String>(
           columnName: collTPlus,
           value: (dataRow.t0 == true) ? 't+0' : 't+1',
@@ -153,8 +156,27 @@ class EtfDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     return DataGridRowAdapter(
       cells: row.getCells().map<Widget>((dataCell) {
+        if (dataCell.columnName == collName) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                (dataCell.value as (String, String)).$2.split('.').first,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                (dataCell.value as (String, String)).$1,
+                textAlign: TextAlign.center,
+                // style: const TextStyle(color: Colors.grey),
+              ),
+            ],
+          );
+        }
+
         var str = switch (dataCell.columnName) {
-          collTurnover => (dataCell.value / 1e8).toStringAsFixed(2) + '亿',
+          collTurnover =>
+            '${((dataCell.value as double) / 1e8).toStringAsFixed(2)}亿',
           _ => dataCell.value.toString(),
         };
 
