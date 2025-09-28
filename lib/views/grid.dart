@@ -81,7 +81,10 @@ class DataGrid extends StatelessWidget {
             label: Container(
               padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
-              child: const Text('ATR%'),
+              child: const Text(
+                'ATR%',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           GridColumn(

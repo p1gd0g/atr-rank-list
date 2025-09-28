@@ -10,7 +10,6 @@ import 'package:myapp/firebase_options.dart';
 import 'package:myapp/views/bottom.dart';
 import 'package:myapp/views/grid.dart';
 import 'dart:developer' as developer;
-import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:stack_trace/stack_trace.dart';
 
@@ -49,9 +48,10 @@ void main() {
         // bottomSheet: Bottom(),
         appBar: AppBar(
           title: const Text(
-            'ATRX - ETF 波动率排名',
+            appName,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
+
           actions: [
             Obx(
               () => DropdownButton(
@@ -59,9 +59,10 @@ void main() {
                 value: mgr.periodLength.value,
                 items: [
                   // DropdownMenuItem(value: 1, child: Text('1')),
-                  DropdownMenuItem(value: 4, child: Text('4')),
                   DropdownMenuItem(value: 14, child: Text('14')),
                   DropdownMenuItem(value: 28, child: Text('28')),
+                  DropdownMenuItem(value: 42, child: Text('42')),
+                  DropdownMenuItem(value: 56, child: Text('56')),
                   DropdownMenuItem(
                     value: 999,
                     enabled: false,
