@@ -59,6 +59,7 @@ void main() {
                 value: mgr.periodLength.value,
                 items: [
                   // DropdownMenuItem(value: 1, child: Text('1')),
+                  DropdownMenuItem(value: 7, child: Text('7')),
                   DropdownMenuItem(value: 14, child: Text('14')),
                   DropdownMenuItem(value: 28, child: Text('28')),
                   DropdownMenuItem(value: 42, child: Text('42')),

@@ -6,6 +6,8 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 const collName = 'symbol';
 const collPrice = 'price';
+const collHigh = 'high';
+const collLow = 'low';
 const collTurnover = 'turnover';
 const collATR = 'atr';
 const collATRPercent = 'atr%';
@@ -27,9 +29,11 @@ class DataGrid extends StatelessWidget {
         allowMultiColumnSorting: true,
         headerGridLinesVisibility: GridLinesVisibility.both,
         gridLinesVisibility: GridLinesVisibility.both,
-        columnWidthMode: ColumnWidthMode.auto,
+        columnWidthMode: context.width > 800
+            ? ColumnWidthMode.fill
+            : ColumnWidthMode.auto,
 
-        // isScrollbarAlwaysShown: true,
+        isScrollbarAlwaysShown: true,
         // showVerticalScrollbar: true,
         // showHorizontalScrollbar: true,
         columns: [
@@ -60,6 +64,25 @@ class DataGrid extends StatelessWidget {
               child: const Text('价格'),
             ),
           ),
+
+          GridColumn(
+            columnName: collHigh,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('最高'),
+            ),
+          ),
+
+          GridColumn(
+            columnName: collLow,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('最低'),
+            ),
+          ),
+
           GridColumn(
             columnName: collTurnover,
             label: Container(
@@ -141,6 +164,16 @@ class EtfDataSource extends DataGridSource {
           columnName: collPrice,
           value: basePrice.toString(),
         ),
+
+        DataGridCell<String>(
+          columnName: collHigh,
+          value: dataRow.getHigh(periodUnit, periodLength).toString(),
+        ),
+        DataGridCell<String>(
+          columnName: collLow,
+          value: dataRow.getLow(periodUnit, periodLength).toString(),
+        ),
+
         DataGridCell<double>(columnName: collTurnover, value: turnover),
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
         DataGridCell(

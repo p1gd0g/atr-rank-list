@@ -41,6 +41,54 @@ class ETF {
     }
   }
 
+  double getHigh(Period period, int length) {
+    List<Candlestick> csList;
+    if (period == Period.hour) {
+      if (cs1000Hour == null || cs1000Hour!.length < length) {
+        return 0.0;
+      }
+      csList = cs1000Hour!;
+    } else {
+      if (cs1000Day == null || cs1000Day!.length < length) {
+        return 0.0;
+      }
+      csList = cs1000Day!;
+    }
+
+    double high = csList[csList.length - length].high ?? 0.0;
+    for (int i = csList.length - length; i < csList.length; i++) {
+      var cs = csList[i];
+      if ((cs.high ?? 0.0) > high) {
+        high = cs.high ?? 0.0;
+      }
+    }
+    return high;
+  }
+
+  double getLow(Period period, int length) {
+    List<Candlestick> csList;
+    if (period == Period.hour) {
+      if (cs1000Hour == null || cs1000Hour!.length < length) {
+        return 0.0;
+      }
+      csList = cs1000Hour!;
+    } else {
+      if (cs1000Day == null || cs1000Day!.length < length) {
+        return 0.0;
+      }
+      csList = cs1000Day!;
+    }
+
+    double low = csList[csList.length - length].low ?? double.infinity;
+    for (int i = csList.length - length; i < csList.length; i++) {
+      var cs = csList[i];
+      if ((cs.low ?? double.infinity) < low) {
+        low = cs.low ?? double.infinity;
+      }
+    }
+    return low == double.infinity ? 0.0 : low;
+  }
+
   double getATR(Period period, int length) {
     List<Candlestick> csList;
     if (period == Period.hour) {
