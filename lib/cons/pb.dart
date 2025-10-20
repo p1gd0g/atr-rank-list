@@ -16,8 +16,7 @@ class PBC extends GetxController {
 
   Future<List<ETF>> getETFs() async {
     var r = await pb.collection(coll_etfs).getFullList();
-    return r.map((e) => ETF.fromMap(e.toJson())).toList();
+    return r.map((e) => ETF.fromMap(e.toJson())).toList()
+      ..sort((a, b) => a.symbol!.compareTo(b.symbol!));
   }
 }
-
-

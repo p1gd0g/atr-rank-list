@@ -10,7 +10,8 @@ class Bottom extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextButton.icon(
-          onPressed: () => launchUrlString('https://www.p1gd0g.cc'),
+          onPressed: () =>
+              launchUrlString('https://x.p1gd0g.cc/assets/assets/mp.jpg'),
           label: Text('关注作者 @p1gd0g'),
           icon: Icon(Icons.account_circle),
         ),
