@@ -117,6 +117,28 @@ class ETF {
     return atr / length;
   }
 
+  double getATRPercent(Period period, int length) {
+    List<Candlestick> csList;
+    if (period == Period.hour) {
+      if (cs1000Hour == null || cs1000Hour!.isEmpty) {
+        return 0.0;
+      }
+      csList = cs1000Hour!;
+    } else {
+      if (cs1000Day == null || cs1000Day!.isEmpty) {
+        return 0.0;
+      }
+      csList = cs1000Day!;
+    }
+
+    double atr = getATR(period, length);
+    double basePrice = csList.last.close ?? 0.0;
+    if (basePrice == 0.0) {
+      return 0.0;
+    }
+    return atr / basePrice * 100;
+  }
+
   double getTurnover(Period period, int length) {
     List<Candlestick> csList;
     if (period == Period.hour) {

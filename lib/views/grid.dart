@@ -144,7 +144,7 @@ class EtfDataSource extends DataGridSource {
         : (dataRow.cs1000Hour?.last.close ?? 0.0);
 
     var atr = dataRow.getATR(periodUnit, periodLength);
-    var atrPercent = (basePrice == 0.0) ? 0.0 : atr / basePrice * 100;
+    var atrPercent = dataRow.getATRPercent(periodUnit, periodLength);
 
     var turnover = dataRow.getTurnover(periodUnit, periodLength);
 
@@ -171,15 +171,13 @@ class EtfDataSource extends DataGridSource {
         ),
         DataGridCell<String>(
           columnName: collLow,
+
           value: dataRow.getLow(periodUnit, periodLength).toString(),
         ),
 
         DataGridCell<double>(columnName: collTurnover, value: turnover),
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
-        DataGridCell(
-          columnName: collATRPercent,
-          value: '${atrPercent.toStringAsFixed(2)}%',
-        ),
+        DataGridCell(columnName: collATRPercent, value: atrPercent),
         DataGridCell(
           columnName: collUpdateTime,
           value: dataRow.updateTime.toLocal().toString().split(' ').first,
@@ -204,25 +202,49 @@ class EtfDataSource extends DataGridSource {
               Text(
                 (dataCell.value as (String, String)).$1,
                 textAlign: TextAlign.center,
-                // style: const TextStyle(color: Colors.grey),
               ),
             ],
           );
         }
 
         var str = switch (dataCell.columnName) {
+          collATRPercent => '${(dataCell.value as double).toStringAsFixed(2)}%',
           collTurnover =>
             '${((dataCell.value as double) / 1e8).toStringAsFixed(2)}亿',
+
           _ => dataCell.value.toString(),
         };
 
         var fontWeight = switch (dataCell.columnName) {
-          collATRPercent => FontWeight.bold,
+          // collATRPercent => FontWeight.bold,
           collName => FontWeight.bold,
           _ => FontWeight.normal,
         };
 
-        return Center(
+        var color = Colors.white;
+        if (dataCell.columnName == collATRPercent) {
+          // clone etfs
+          var etfs = List<ETF>.from(this.etfs);
+          etfs.sort((a, b) {
+            var aAtrPercent = a.getATRPercent(periodUnit, periodLength);
+            var bAtrPercent = b.getATRPercent(periodUnit, periodLength);
+            return aAtrPercent.compareTo(bAtrPercent);
+          });
+          var index = etfs.indexWhere(
+            (etf) =>
+                etf.symbol ==
+                (row.getCells().first.value as (String, String)).$2,
+          );
+          var percent = index / etfs.length;
+          // percent to 64 ~ 192
+          var alpha = ((percent * 128) + 64).toInt();
+
+          color = Color.fromARGB(alpha, 255, 0, 0);
+        }
+
+        return Container(
+          color: color,
+          alignment: Alignment.center,
           child: Text(
             str,
             textAlign: TextAlign.center,
