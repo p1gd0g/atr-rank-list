@@ -163,7 +163,23 @@ class ETF {
   }
 }
 
-enum Period { minute, hour, day }
+enum Period {
+  minute,
+  hour,
+  day,
+
+  // @override
+  // String toString() {
+  //   switch (this) {
+  //     case Period.minute:
+  //       return '分钟';
+  //     case Period.hour:
+  //       return '小时';
+  //     case Period.day:
+  //       return '天';
+  //   }
+  // }
+}
 
 class Candlestick {
   DateTime? time;

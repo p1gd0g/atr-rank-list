@@ -54,44 +54,45 @@ void main() {
 
           actions: [
             Obx(
-              () => DropdownButton(
+              () => DropdownButton<(int, Period)>(
                 alignment: Alignment.center,
-                value: mgr.periodLength.value,
+                value: (mgr.periodLength.value, mgr.periodUnit.value),
                 items: [
-                  // DropdownMenuItem(value: 1, child: Text('1')),
-                  DropdownMenuItem(value: 7, child: Text('7')),
-                  DropdownMenuItem(value: 14, child: Text('14')),
-                  DropdownMenuItem(value: 28, child: Text('28')),
-                  // DropdownMenuItem(value: 42, child: Text('42')),
-                  DropdownMenuItem(value: 56, child: Text('56')),
-                  DropdownMenuItem(value: 112, child: Text('112')),
+                  /// 按天计算
+                  DropdownMenuItem(
+                    value: (14, Period.day),
+                    child: Text('过去 14 交易日'),
+                  ),
+                  DropdownMenuItem(
+                    value: (30, Period.day),
+                    child: Text('过去 30 交易日'),
+                  ),
+                  DropdownMenuItem(
+                    value: (60, Period.day),
+                    child: Text('过去 60 交易日'),
+                  ),
 
+                  DropdownMenuItem(enabled: false, child: const Divider()),
+
+                  /// 按小时计算
                   DropdownMenuItem(
-                    value: 999,
-                    enabled: false,
-                    child: Text('999', style: TextStyle(color: Colors.grey)),
+                    value: (4, Period.hour),
+                    child: Text('过去 4 交易小时'),
+                  ),
+                  DropdownMenuItem(
+                    value: (12, Period.hour),
+                    child: Text('过去 12 交易小时'),
+                  ),
+                  DropdownMenuItem(
+                    value: (24, Period.hour),
+                    child: Text('过去 24 交易小时'),
                   ),
                 ],
                 onChanged: (value) {
-                  mgr.periodLength.value = value!;
-                },
-              ),
-            ),
-            Obx(
-              () => DropdownButton(
-                alignment: Alignment.center,
-                value: mgr.periodUnit.value,
-                items: [
-                  DropdownMenuItem(value: Period.day, child: Text('Day')),
-                  DropdownMenuItem(value: Period.hour, child: Text('Hour')),
-                  DropdownMenuItem(
-                    value: Period.minute,
-                    enabled: false,
-                    child: Text('Minute', style: TextStyle(color: Colors.grey)),
-                  ),
-                ],
-                onChanged: (value) {
-                  mgr.periodUnit.value = value!;
+                  if (value != null) {
+                    mgr.periodLength.value = value.$1;
+                    mgr.periodUnit.value = value.$2;
+                  }
                 },
               ),
             ),
