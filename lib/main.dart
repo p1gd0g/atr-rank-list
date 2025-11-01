@@ -45,7 +45,6 @@ void main() {
 
       home: Scaffold(
         bottomNavigationBar: Bottom(),
-        // bottomSheet: Bottom(),
         appBar: AppBar(
           title: const Text(
             appName,
@@ -60,33 +59,45 @@ void main() {
                 items: [
                   /// 按天计算
                   DropdownMenuItem(
+                    value: (1, Period.day),
+                    child: Text('过去 1 个交易日'),
+                  ),
+                  DropdownMenuItem(
+                    value: (3, Period.day),
+                    child: Text('过去 3 个交易日'),
+                  ),
+                  DropdownMenuItem(
+                    value: (7, Period.day),
+                    child: Text('过去 7 个交易日'),
+                  ),
+                  DropdownMenuItem(
                     value: (14, Period.day),
-                    child: Text('过去 14 交易日'),
+                    child: Text('过去 14 个交易日'),
                   ),
                   DropdownMenuItem(
                     value: (30, Period.day),
-                    child: Text('过去 30 交易日'),
+                    child: Text('过去 30 个交易日'),
                   ),
                   DropdownMenuItem(
                     value: (60, Period.day),
-                    child: Text('过去 60 交易日'),
+                    child: Text('过去 60 个交易日'),
                   ),
 
-                  DropdownMenuItem(enabled: false, child: const Divider()),
+                  // DropdownMenuItem(enabled: false, child: const Divider()),
 
                   /// 按小时计算
-                  DropdownMenuItem(
-                    value: (4, Period.hour),
-                    child: Text('过去 4 交易小时'),
-                  ),
-                  DropdownMenuItem(
-                    value: (12, Period.hour),
-                    child: Text('过去 12 交易小时'),
-                  ),
-                  DropdownMenuItem(
-                    value: (24, Period.hour),
-                    child: Text('过去 24 交易小时'),
-                  ),
+                  // DropdownMenuItem(
+                  //   value: (4, Period.hour),
+                  //   child: Text('过去 4 交易小时'),
+                  // ),
+                  // DropdownMenuItem(
+                  //   value: (12, Period.hour),
+                  //   child: Text('过去 12 交易小时'),
+                  // ),
+                  // DropdownMenuItem(
+                  //   value: (24, Period.hour),
+                  //   child: Text('过去 24 交易小时'),
+                  // ),
                 ],
                 onChanged: (value) {
                   if (value != null) {

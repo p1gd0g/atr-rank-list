@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myapp/cons/data.dart';
 import 'package:myapp/cons/mgr.dart';
+import 'package:myapp/ext.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 const collName = 'symbol';
@@ -9,6 +10,7 @@ const collPrice = 'price';
 const collHigh = 'high';
 const collLow = 'low';
 const collTurnover = 'turnover';
+const collChange = 'change';
 const collATR = 'atr';
 const collATRPercent = 'atr%';
 const collUpdateTime = 'updateTime';
@@ -83,6 +85,14 @@ class DataGrid extends StatelessWidget {
             ),
           ),
 
+          GridColumn(
+            columnName: collChange,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('涨跌幅'),
+            ),
+          ),
           GridColumn(
             columnName: collTurnover,
             label: Container(
@@ -175,6 +185,10 @@ class EtfDataSource extends DataGridSource {
           value: dataRow.getLow(periodUnit, periodLength).toString(),
         ),
 
+        DataGridCell<double>(
+          columnName: collChange,
+          value: dataRow.getChange(periodUnit, periodLength),
+        ),
         DataGridCell<double>(columnName: collTurnover, value: turnover),
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
         DataGridCell(columnName: collATRPercent, value: atrPercent),
@@ -211,37 +225,17 @@ class EtfDataSource extends DataGridSource {
           collATRPercent => '${(dataCell.value as double).toStringAsFixed(2)}%',
           collTurnover =>
             '${((dataCell.value as double) / 1e8).toStringAsFixed(2)}亿',
+          collChange => '${(dataCell.value as double).toStringAsFixed(2)}%',
 
           _ => dataCell.value.toString(),
         };
 
         var fontWeight = switch (dataCell.columnName) {
-          // collATRPercent => FontWeight.bold,
           collName => FontWeight.bold,
           _ => FontWeight.normal,
         };
 
-        var color = Colors.white;
-        if (dataCell.columnName == collATRPercent) {
-          // clone etfs
-          var etfs = List<ETF>.from(this.etfs);
-          etfs.sort((a, b) {
-            var aAtrPercent = a.getATRPercent(periodUnit, periodLength);
-            var bAtrPercent = b.getATRPercent(periodUnit, periodLength);
-            return aAtrPercent.compareTo(bAtrPercent);
-          });
-          var index = etfs.indexWhere(
-            (etf) =>
-                etf.symbol ==
-                (row.getCells().first.value as (String, String)).$2,
-          );
-          var percent = index / etfs.length;
-          // percent to 64 ~ 192
-          var alpha = ((percent * 128) + 64).toInt();
-
-          color = Color.fromARGB(alpha, 255, 0, 0);
-        }
-
+        var color = getColor(dataCell.columnName, row);
         return Container(
           color: color,
           alignment: Alignment.center,
@@ -253,5 +247,82 @@ class EtfDataSource extends DataGridSource {
         );
       }).toList(),
     );
+  }
+
+  Color getColor(String columnName, DataGridRow row) {
+    var color = Colors.white;
+    // clone etfs
+    var etfs = List<ETF>.from(this.etfs);
+    if (columnName == collATRPercent) {
+      etfs.sort((a, b) {
+        var aAtrPercent = a.getATRPercent(periodUnit, periodLength);
+        var bAtrPercent = b.getATRPercent(periodUnit, periodLength);
+        return aAtrPercent.compareTo(bAtrPercent);
+      });
+      var index = etfs.indexWhere(
+        (etf) =>
+            etf.symbol == (row.getCells().first.value as (String, String)).$2,
+      );
+      var percent = index / etfs.length;
+      color = Colors.red.myWithOpacity(percent);
+    } else if (columnName == collTurnover) {
+      // var etfs = List<ETF>.from(this.etfs);
+      etfs.sort((a, b) {
+        var aTurnover = a.getTurnover(periodUnit, periodLength);
+        var bTurnover = b.getTurnover(periodUnit, periodLength);
+        return aTurnover.compareTo(bTurnover);
+      });
+      var index = etfs.indexWhere(
+        (etf) =>
+            etf.symbol == (row.getCells().first.value as (String, String)).$2,
+      );
+      var percent = index / etfs.length;
+      color = Colors.red.myWithOpacity(percent);
+    } else if (columnName == collChange) {
+      etfs.sort((a, b) {
+        var aChange = a.getChange(periodUnit, periodLength);
+        var bChange = b.getChange(periodUnit, periodLength);
+        return aChange.compareTo(bChange);
+      });
+
+      var index = etfs.indexWhere(
+        (etf) =>
+            etf.symbol == (row.getCells().first.value as (String, String)).$2,
+      );
+
+      if (etfs[index].getChange(periodUnit, periodLength) == 0) {
+      } else if (etfs[index].getChange(periodUnit, periodLength) > 0) {
+        etfs = etfs
+            .where((etf) => etf.getChange(periodUnit, periodLength) > 0)
+            .toList();
+        var redCount = etfs.length;
+        var index = etfs.indexWhere(
+          (etf) =>
+              etf.symbol == (row.getCells().first.value as (String, String)).$2,
+        );
+        // 如果只有一个，应该为最不红的，percent 应该为 0
+        var percent = index / redCount;
+        color = Colors.red.myWithOpacity(percent);
+      } else {
+        etfs = etfs
+            .where((etf) => etf.getChange(periodUnit, periodLength) < 0)
+            .toList();
+
+        var greenCount = etfs.length;
+        var index = etfs.indexWhere(
+          (etf) =>
+              etf.symbol == (row.getCells().first.value as (String, String)).$2,
+        );
+        // 如果只有一个，应该为最不绿的，percent 应该为 0
+        var percent = (greenCount - (index + 1)) / greenCount;
+        color = Colors.green.myWithOpacity(percent);
+      }
+    } else if (columnName == collTPlus) {
+      row.getCells()[1].value == 't+0'
+          ? color = Colors.red.myWithOpacity(0.5)
+          : null;
+    }
+
+    return color;
   }
 }

@@ -41,19 +41,43 @@ class ETF {
     }
   }
 
-  double getHigh(Period period, int length) {
-    List<Candlestick> csList;
-    if (period == Period.hour) {
-      if (cs1000Hour == null || cs1000Hour!.length < length) {
-        return 0.0;
-      }
-      csList = cs1000Hour!;
-    } else {
-      if (cs1000Day == null || cs1000Day!.length < length) {
-        return 0.0;
-      }
-      csList = cs1000Day!;
+  double getChange(Period period, int length) {
+    var csList = getList(period);
+    if (csList.isEmpty) {
+      return 0.0;
     }
+
+    var startPrice = csList[csList.length - length - 1].close ?? 0.0;
+    var endPrice = csList.last.close ?? 0.0;
+    if (startPrice == 0.0) {
+      return 0.0;
+    }
+    return (endPrice - startPrice) / startPrice * 100;
+  }
+
+  List<Candlestick> getList(Period period) {
+    if (period == Period.hour) {
+      return cs1000Hour ?? [];
+    } else if (period == Period.day) {
+      return cs1000Day ?? [];
+    } else {
+      return [];
+    }
+  }
+
+  double getHigh(Period period, int length) {
+    List<Candlestick> csList = getList(period);
+    // if (period == Period.hour) {
+    //   if (cs1000Hour == null || cs1000Hour!.length < length) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Hour!;
+    // } else {
+    //   if (cs1000Day == null || cs1000Day!.length < length) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Day!;
+    // }
 
     double high = csList[csList.length - length].high ?? 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -66,18 +90,18 @@ class ETF {
   }
 
   double getLow(Period period, int length) {
-    List<Candlestick> csList;
-    if (period == Period.hour) {
-      if (cs1000Hour == null || cs1000Hour!.length < length) {
-        return 0.0;
-      }
-      csList = cs1000Hour!;
-    } else {
-      if (cs1000Day == null || cs1000Day!.length < length) {
-        return 0.0;
-      }
-      csList = cs1000Day!;
-    }
+    List<Candlestick> csList = getList(period);
+    // if (period == Period.hour) {
+    //   if (cs1000Hour == null || cs1000Hour!.length < length) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Hour!;
+    // } else {
+    //   if (cs1000Day == null || cs1000Day!.length < length) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Day!;
+    // }
 
     double low = csList[csList.length - length].low ?? double.infinity;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -90,18 +114,18 @@ class ETF {
   }
 
   double getATR(Period period, int length) {
-    List<Candlestick> csList;
-    if (period == Period.hour) {
-      if (cs1000Hour == null || cs1000Hour!.length < length + 1) {
-        return 0.0;
-      }
-      csList = cs1000Hour!;
-    } else {
-      if (cs1000Day == null || cs1000Day!.length < length + 1) {
-        return 0.0;
-      }
-      csList = cs1000Day!;
-    }
+    List<Candlestick> csList = getList(period);
+    // if (period == Period.hour) {
+    //   if (cs1000Hour == null || cs1000Hour!.length < length + 1) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Hour!;
+    // } else {
+    //   if (cs1000Day == null || cs1000Day!.length < length + 1) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Day!;
+    // }
 
     double atr = 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -118,18 +142,18 @@ class ETF {
   }
 
   double getATRPercent(Period period, int length) {
-    List<Candlestick> csList;
-    if (period == Period.hour) {
-      if (cs1000Hour == null || cs1000Hour!.isEmpty) {
-        return 0.0;
-      }
-      csList = cs1000Hour!;
-    } else {
-      if (cs1000Day == null || cs1000Day!.isEmpty) {
-        return 0.0;
-      }
-      csList = cs1000Day!;
-    }
+    List<Candlestick> csList = getList(period);
+    // if (period == Period.hour) {
+    //   if (cs1000Hour == null || cs1000Hour!.isEmpty) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Hour!;
+    // } else {
+    //   if (cs1000Day == null || cs1000Day!.isEmpty) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Day!;
+    // }
 
     double atr = getATR(period, length);
     double basePrice = csList.last.close ?? 0.0;
@@ -140,18 +164,18 @@ class ETF {
   }
 
   double getTurnover(Period period, int length) {
-    List<Candlestick> csList;
-    if (period == Period.hour) {
-      if (cs1000Hour == null || cs1000Hour!.isEmpty) {
-        return 0.0;
-      }
-      csList = cs1000Hour!;
-    } else {
-      if (cs1000Day == null || cs1000Day!.isEmpty) {
-        return 0.0;
-      }
-      csList = cs1000Day!;
-    }
+    List<Candlestick> csList = getList(period);
+    // if (period == Period.hour) {
+    //   if (cs1000Hour == null || cs1000Hour!.isEmpty) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Hour!;
+    // } else {
+    //   if (cs1000Day == null || cs1000Day!.isEmpty) {
+    //     return 0.0;
+    //   }
+    //   csList = cs1000Day!;
+    // }
 
     double turnover = 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -163,23 +187,7 @@ class ETF {
   }
 }
 
-enum Period {
-  minute,
-  hour,
-  day,
-
-  // @override
-  // String toString() {
-  //   switch (this) {
-  //     case Period.minute:
-  //       return '分钟';
-  //     case Period.hour:
-  //       return '小时';
-  //     case Period.day:
-  //       return '天';
-  //   }
-  // }
-}
+enum Period { minute, hour, day }
 
 class Candlestick {
   DateTime? time;
