@@ -15,6 +15,8 @@ const collATR = 'atr';
 const collATRPercent = 'atr%';
 const collUpdateTime = 'updateTime';
 const collTPlus = 't0';
+const collOHLCLength = 'ohlcLength';
+const collOHLCLengthPercent = 'ohlcLength%';
 
 class DataGrid extends StatelessWidget {
   const DataGrid({super.key, required this.etfs});
@@ -121,6 +123,25 @@ class DataGrid extends StatelessWidget {
             ),
           ),
           GridColumn(
+            columnName: collOHLCLength,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text('OHLC步长'),
+            ),
+          ),
+          GridColumn(
+            columnName: collOHLCLengthPercent,
+            label: Container(
+              padding: const EdgeInsets.all(8.0),
+              alignment: Alignment.center,
+              child: const Text(
+                'OHLC步长%',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          GridColumn(
             columnName: collUpdateTime,
             label: Container(
               padding: const EdgeInsets.all(8.0),
@@ -156,6 +177,12 @@ class EtfDataSource extends DataGridSource {
     var atr = dataRow.getATR(periodUnit, periodLength);
     var atrPercent = dataRow.getATRPercent(periodUnit, periodLength);
 
+    var ohlcLength = dataRow.getOHLCLength(periodUnit, periodLength);
+    var ohlcLengthPercent = dataRow.getOHLCLengthPercent(
+      periodUnit,
+      periodLength,
+    );
+
     var turnover = dataRow.getTurnover(periodUnit, periodLength);
 
     // var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
@@ -190,8 +217,19 @@ class EtfDataSource extends DataGridSource {
           value: dataRow.getChange(periodUnit, periodLength),
         ),
         DataGridCell<double>(columnName: collTurnover, value: turnover),
+
         DataGridCell(columnName: collATR, value: atr.toStringAsFixed(4)),
         DataGridCell(columnName: collATRPercent, value: atrPercent),
+
+        DataGridCell(
+          columnName: collOHLCLength,
+          value: ohlcLength.toStringAsFixed(3),
+        ),
+        DataGridCell(
+          columnName: collOHLCLengthPercent,
+          value: ohlcLengthPercent,
+        ),
+
         DataGridCell(
           columnName: collUpdateTime,
           value: dataRow.updateTime.toLocal().toString().split(' ').first,
@@ -223,6 +261,8 @@ class EtfDataSource extends DataGridSource {
 
         var str = switch (dataCell.columnName) {
           collATRPercent => '${(dataCell.value as double).toStringAsFixed(2)}%',
+          collOHLCLengthPercent =>
+            '${(dataCell.value as double).toStringAsFixed(2)}%',
           collTurnover =>
             '${((dataCell.value as double) / 1e8).toStringAsFixed(2)}亿',
           collChange => '${(dataCell.value as double).toStringAsFixed(2)}%',
@@ -258,6 +298,24 @@ class EtfDataSource extends DataGridSource {
         var aAtrPercent = a.getATRPercent(periodUnit, periodLength);
         var bAtrPercent = b.getATRPercent(periodUnit, periodLength);
         return aAtrPercent.compareTo(bAtrPercent);
+      });
+      var index = etfs.indexWhere(
+        (etf) =>
+            etf.symbol == (row.getCells().first.value as (String, String)).$2,
+      );
+      var percent = index / etfs.length;
+      color = Colors.red.myWithOpacity(percent);
+    } else if (columnName == collOHLCLengthPercent) {
+      etfs.sort((a, b) {
+        var aOhlcLengthPercent = a.getOHLCLengthPercent(
+          periodUnit,
+          periodLength,
+        );
+        var bOhlcLengthPercent = b.getOHLCLengthPercent(
+          periodUnit,
+          periodLength,
+        );
+        return aOhlcLengthPercent.compareTo(bOhlcLengthPercent);
       });
       var index = etfs.indexWhere(
         (etf) =>

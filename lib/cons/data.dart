@@ -165,17 +165,6 @@ class ETF {
 
   double getTurnover(Period period, int length) {
     List<Candlestick> csList = getList(period);
-    // if (period == Period.hour) {
-    //   if (cs1000Hour == null || cs1000Hour!.isEmpty) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Hour!;
-    // } else {
-    //   if (cs1000Day == null || cs1000Day!.isEmpty) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Day!;
-    // }
 
     double turnover = 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -184,6 +173,39 @@ class ETF {
     }
 
     return turnover;
+  }
+
+  double getOHLCLength(Period period, int length) {
+    var csList = getList(period);
+
+    double ohlcLength = 0.0;
+
+    for (int i = csList.length - length; i < csList.length; i++) {
+      var pcs = csList[i - 1];
+      var cs = csList[i];
+
+      // c - o
+      ohlcLength += ((pcs.close ?? 0.0) - (cs.open ?? 0.0)).abs();
+      // o - h
+      ohlcLength += ((cs.open ?? 0.0) - (cs.high ?? 0.0)).abs();
+      // h - l
+      ohlcLength += ((cs.high ?? 0.0) - (cs.low ?? 0.0)).abs();
+      // l - c
+      ohlcLength += ((cs.low ?? 0.0) - (cs.close ?? 0.0)).abs();
+    }
+
+    return ohlcLength;
+  }
+
+  double getOHLCLengthPercent(Period period, int length) {
+    var csList = getList(period);
+
+    double ohlcLength = getOHLCLength(period, length);
+    double basePrice = csList.last.close ?? 0.0;
+    if (basePrice == 0.0) {
+      return 0.0;
+    }
+    return ohlcLength / basePrice * 100;
   }
 }
 
