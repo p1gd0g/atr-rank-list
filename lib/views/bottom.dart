@@ -15,7 +15,13 @@ class Bottom extends StatelessWidget {
           label: Text('关注作者 @p1gd0g'),
           icon: Icon(Icons.account_circle),
         ),
-        // Text('不构成投资建议！', style: TextStyle(color: Colors.red)),
+        TextButton.icon(
+          onPressed: () => launchUrlString(
+            'https://mp.weixin.qq.com/s/bwxiZmZ3MzXMEFltwkdN5g',
+          ),
+          label: Text('指标解释'),
+          icon: Icon(Icons.help),
+        ),
         TextButton.icon(
           onPressed: () => launchUrlString('https://x.p1gd0g.cc'),
           label: Text('Gridder 网格交易测试工具'),
