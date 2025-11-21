@@ -13,7 +13,7 @@ import 'dart:developer' as developer;
 
 import 'package:stack_trace/stack_trace.dart';
 
-const String appName = 'ATRX - ETF 波动率排名';
+const String appName = 'ATRx - ETF 波动率排名';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

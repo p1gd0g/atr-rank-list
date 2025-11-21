@@ -1,11 +1,11 @@
 {
-    "name": "ATR Rank List",
-    "short_name": "ATR Rank List",
+    "name": "ATRx - ETF Rank List",
+    "short_name": "ATRx - ETF Rank List",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
-    "description": "ATR Rank List",
+    "description": "ATRx - ETF Rank List",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
