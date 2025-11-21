@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.10.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -43,6 +43,7 @@ dependencies:
   pocketbase: ^0.23.0+1
   syncfusion_flutter_datagrid: ^31.1.19
   url_launcher: ^6.3.2
+  syncfusion_flutter_gauges: ^31.2.12
 
 dev_dependencies:
   flutter_test:

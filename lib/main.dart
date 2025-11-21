@@ -3,11 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myapp/cons/conn.dart';
 import 'package:myapp/cons/data.dart';
 import 'package:myapp/cons/mgr.dart';
 import 'package:myapp/cons/pb.dart';
 import 'package:myapp/firebase_options.dart';
 import 'package:myapp/views/bottom.dart';
+import 'package:myapp/views/gauge.dart';
 import 'package:myapp/views/grid.dart';
 import 'dart:developer' as developer;
 
@@ -26,6 +28,7 @@ void main() {
 
   var pbc = Get.put(PBC());
   var mgr = Get.put(Mgr());
+  var connMgr = Get.put(ConnMgr());
 
   runApp(
     GetMaterialApp(
@@ -50,7 +53,6 @@ void main() {
             appName,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-
           actions: [
             Obx(
               () => DropdownButton<(int, Period)>(
@@ -109,18 +111,37 @@ void main() {
             ),
           ],
         ),
-        body: FutureBuilder(
-          future: pbc.getETFs(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              final etfs = snapshot.data!;
-              return DataGrid(etfs: etfs);
-            }
-          },
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              FutureBuilder(
+                future: connMgr.fetchMarketTemperature(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final marketTemperature = snapshot.data!;
+                    return Gauges(marketTemperature);
+                  }
+                },
+              ),
+              FutureBuilder(
+                future: pbc.getETFs(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    final etfs = snapshot.data!;
+                    return DataGrid(etfs: etfs);
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     ),

@@ -236,3 +236,37 @@ class Candlestick {
     time = DateTime.fromMillisecondsSinceEpoch(timestamp! * 1000);
   }
 }
+
+class MarketTemperatureData {
+  int? temperature;
+  String? description;
+  int? valuation;
+  int? sentiment;
+  String? updatedAt;
+
+  MarketTemperatureData({
+    this.temperature,
+    this.description,
+    this.valuation,
+    this.sentiment,
+    this.updatedAt,
+  });
+
+  MarketTemperatureData.fromJson(Map<String, dynamic> json) {
+    temperature = json['temperature'];
+    description = json['description'];
+    valuation = json['valuation'];
+    sentiment = json['sentiment'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['temperature'] = temperature;
+    data['description'] = description;
+    data['valuation'] = valuation;
+    data['sentiment'] = sentiment;
+    data['updated_at'] = updatedAt;
+    return data;
+  }
+}
