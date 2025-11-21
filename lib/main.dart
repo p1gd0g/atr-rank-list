@@ -111,37 +111,52 @@ void main() {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: connMgr.fetchMarketTemperature(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    final marketTemperature = snapshot.data!;
-                    return Gauges(marketTemperature);
-                  }
-                },
+        body: LayoutBuilder(
+          builder: (context, parentCons) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  FutureBuilder(
+                    future: connMgr.fetchMarketTemperature(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        final marketTemperature = snapshot.data!;
+                        return Gauges(marketTemperature);
+                      }
+                    },
+                  ),
+                  FutureBuilder(
+                    future: pbc.getETFs(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else {
+                        final etfs = snapshot.data!;
+
+                        return LayoutBuilder(
+                          builder: (context, constraints) {
+                            return Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    parentCons.maxHeight - context.width / 3,
+                              ),
+                              child: DataGrid(etfs: etfs),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
-              FutureBuilder(
-                future: pbc.getETFs(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    final etfs = snapshot.data!;
-                    return DataGrid(etfs: etfs);
-                  }
-                },
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     ),

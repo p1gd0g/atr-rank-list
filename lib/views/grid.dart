@@ -33,9 +33,9 @@ class DataGrid extends StatelessWidget {
         allowMultiColumnSorting: true,
         headerGridLinesVisibility: GridLinesVisibility.both,
         gridLinesVisibility: GridLinesVisibility.both,
-        columnWidthMode: context.width > 800
-            ? ColumnWidthMode.fill
-            : ColumnWidthMode.auto,
+        // columnWidthMode: context.width > 800
+        //     ? ColumnWidthMode.fill
+        //     : ColumnWidthMode.auto,
 
         isScrollbarAlwaysShown: true,
         // showVerticalScrollbar: true,
