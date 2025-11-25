@@ -211,6 +211,8 @@ class ETF {
 
 enum Period { minute, hour, day }
 
+const int hoursInDay = 5;
+
 class Candlestick {
   DateTime? time;
 
