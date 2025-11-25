@@ -15,9 +15,9 @@ class Gauges extends StatelessWidget {
     return Row(
       mainAxisAlignment: .center,
       children: [
-        buildGauge(context, mtdata.temperature!, '市场温度'),
-        buildGauge(context, mtdata.valuation!, '市场估值'),
-        buildGauge(context, mtdata.sentiment!, '市场情绪'),
+        buildGauge(context, mtdata.temperature!, '市场温度：${mtdata.temperature}'),
+        buildGauge(context, mtdata.valuation!, '市场估值：${mtdata.valuation}'),
+        buildGauge(context, mtdata.sentiment!, '市场情绪：${mtdata.sentiment}'),
       ],
     );
   }
@@ -44,13 +44,13 @@ Widget buildGauge(BuildContext context, int value, String title) {
             NeedlePointer(value: value.toDouble(), enableAnimation: true),
           ],
           showLastLabel: true,
-          annotations: [
-            GaugeAnnotation(
-              widget: Text('$value'),
-              angle: 90,
-              positionFactor: 0.7,
-            ),
-          ],
+          // annotations: [
+          //   GaugeAnnotation(
+          //     widget: Text('$value'),
+          //     angle: 90,
+          //     positionFactor: 0.7,
+          //   ),
+          // ],
           ranges: <GaugeRange>[
             GaugeRange(
               startValue: 0,
