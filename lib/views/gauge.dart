@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:myapp/cons/data.dart';
@@ -21,11 +23,15 @@ class Gauges extends StatelessWidget {
   }
 }
 
+double getMaxSize(BuildContext context) {
+  return min(context.width / 3, 300);
+}
+
 Widget buildGauge(BuildContext context, int value, String title) {
   return Container(
     constraints: BoxConstraints(
-      maxHeight: context.width / 3,
-      maxWidth: context.width / 3,
+      maxHeight: getMaxSize(context),
+      maxWidth: getMaxSize(context),
     ),
     child: SfRadialGauge(
       enableLoadingAnimation: true,

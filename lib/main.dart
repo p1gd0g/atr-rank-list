@@ -144,7 +144,7 @@ void main() {
                             return Container(
                               constraints: BoxConstraints(
                                 maxHeight:
-                                    parentCons.maxHeight - context.width / 3,
+                                    parentCons.maxHeight - getMaxSize(context),
                               ),
                               child: DataGrid(etfs: etfs),
                             );

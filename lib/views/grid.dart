@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:myapp/cons/data.dart';
 import 'package:myapp/cons/mgr.dart';
 import 'package:myapp/ext.dart';
+import 'package:myapp/views/gauge.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 const collName = 'symbol';
@@ -33,9 +34,9 @@ class DataGrid extends StatelessWidget {
         allowMultiColumnSorting: true,
         headerGridLinesVisibility: GridLinesVisibility.both,
         gridLinesVisibility: GridLinesVisibility.both,
-        // columnWidthMode: context.width > 800
-        //     ? ColumnWidthMode.fill
-        //     : ColumnWidthMode.auto,
+        columnWidthMode: context.width > getMaxSize(context) * 3
+            ? ColumnWidthMode.fill
+            : ColumnWidthMode.auto,
 
         isScrollbarAlwaysShown: true,
         // showVerticalScrollbar: true,
