@@ -3,13 +3,13 @@
 set version;
 
 ```
-$ENV:build_vsn='0.13.0'
+$ENV:build_vsn='0.13.1'
 ```
 
 build web:
 
 ```
-flutter build web --build-name $ENV:build_vsn --dart-define vsn=$ENV:build_vsn --output public
+flutter build web --build-name=$ENV:build_vsn --dart-define=vsn=$ENV:build_vsn --output=public
 ```
 
 ## icon 

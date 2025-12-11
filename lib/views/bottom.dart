@@ -18,7 +18,7 @@ class Bottom extends StatelessWidget {
         // ),
         TextButton.icon(
           onPressed: () => launchUrlString(
-            'https://mp.weixin.qq.com/s/bwxiZmZ3MzXMEFltwkdN5g',
+            'https://mp.weixin.qq.com/s/JYESvqKBXMbGTPbzuhw39w',
           ),
           label: Text('指标解释'),
           icon: Icon(Icons.help),
@@ -53,7 +53,7 @@ class Bottom extends StatelessWidget {
                 ],
               ),
               onTap: () =>
-                  launchUrlString('https://x.p1gd0g.cc/assets/assets/mp.jpg'),
+                  launchUrlString('https://mp.weixin.qq.com/s/yoFS-PvjhuvyNDBxZNO9Vg'),
             ),
           ],
           child: Row(
