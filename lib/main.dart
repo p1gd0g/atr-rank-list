@@ -85,15 +85,15 @@ void main() {
 
                   /// 按小时计算
                   DropdownMenuItem(
-                    value: (1 * hoursInDay, Period.hour),
+                    value: (1, Period.hour),
                     child: Text('过去 1 个交易日（小时精度）'),
                   ),
                   DropdownMenuItem(
-                    value: (3 * hoursInDay, Period.hour),
+                    value: (3, Period.hour),
                     child: Text('过去 3 个交易日（小时精度）'),
                   ),
                   DropdownMenuItem(
-                    value: (5 * hoursInDay, Period.hour),
+                    value: (5, Period.hour),
                     child: Text('过去 5 个交易日（小时精度）'),
                   ),
 
@@ -101,15 +101,15 @@ void main() {
 
                   /// 按分钟计算
                   DropdownMenuItem(
-                    value: (1 * minutesInDay, Period.minute),
+                    value: (1, Period.minute),
                     child: Text('过去 1 个交易日（分钟精度）'),
                   ),
                   DropdownMenuItem(
-                    value: (2 * minutesInDay, Period.minute),
+                    value: (2, Period.minute),
                     child: Text('过去 2 个交易日（分钟精度）'),
                   ),
                   DropdownMenuItem(
-                    value: (3 * minutesInDay, Period.minute),
+                    value: (3, Period.minute),
                     child: Text('过去 3 个交易日（分钟精度）'),
                   ),
                 ],

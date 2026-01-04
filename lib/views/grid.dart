@@ -162,11 +162,11 @@ class DataGrid extends StatelessWidget {
 }
 
 class EtfDataSource extends DataGridSource {
-  EtfDataSource(this.etfs, this.periodUnit, this.periodLength);
+  EtfDataSource(this.etfs, this.periodUnit, this.days);
 
   final List<ETF> etfs;
   final Period periodUnit;
-  final int periodLength;
+  final int days;
 
   @override
   List<DataGridRow> get rows => etfs.map<DataGridRow>((dataRow) {
@@ -175,16 +175,16 @@ class EtfDataSource extends DataGridSource {
         ? (dataRow.cs1000Day?.last.close ?? 0.0)
         : (dataRow.cs1000Hour?.last.close ?? 0.0);
 
-    var atr = dataRow.getATR(periodUnit, periodLength);
-    var atrPercent = dataRow.getATRPercent(periodUnit, periodLength);
+    var atr = dataRow.getATRV2(periodUnit, days);
+    var atrPercent = dataRow.getATRPercentV2(periodUnit, days);
 
-    var ohlcLength = dataRow.getOHLCLength(periodUnit, periodLength);
+    var ohlcLength = dataRow.getOHLCLength(periodUnit, days);
     var ohlcLengthPercent = dataRow.getOHLCLengthPercent(
       periodUnit,
-      periodLength,
+      days,
     );
 
-    var turnover = dataRow.getTurnover(periodUnit, periodLength);
+    var turnover = dataRow.getTurnover(periodUnit, days);
 
     // var name = '${dataRow.name}\n${dataRow.symbol?.split('.').first}';
 
@@ -205,17 +205,17 @@ class EtfDataSource extends DataGridSource {
 
         DataGridCell<String>(
           columnName: collHigh,
-          value: dataRow.getHigh(periodUnit, periodLength).toString(),
+          value: dataRow.getHighV2(periodUnit, days).toString(),
         ),
         DataGridCell<String>(
           columnName: collLow,
 
-          value: dataRow.getLow(periodUnit, periodLength).toString(),
+          value: dataRow.getLowV2(periodUnit, days).toString(),
         ),
 
         DataGridCell<double>(
           columnName: collChange,
-          value: dataRow.getChange(periodUnit, periodLength),
+          value: dataRow.getChangeV2(periodUnit, days),
         ),
         DataGridCell<double>(columnName: collTurnover, value: turnover),
 
@@ -296,8 +296,8 @@ class EtfDataSource extends DataGridSource {
     var etfs = List<ETF>.from(this.etfs);
     if (columnName == collATRPercent) {
       etfs.sort((a, b) {
-        var aAtrPercent = a.getATRPercent(periodUnit, periodLength);
-        var bAtrPercent = b.getATRPercent(periodUnit, periodLength);
+        var aAtrPercent = a.getATRPercentV2(periodUnit, days);
+        var bAtrPercent = b.getATRPercentV2(periodUnit, days);
         return aAtrPercent.compareTo(bAtrPercent);
       });
       var index = etfs.indexWhere(
@@ -310,11 +310,11 @@ class EtfDataSource extends DataGridSource {
       etfs.sort((a, b) {
         var aOhlcLengthPercent = a.getOHLCLengthPercent(
           periodUnit,
-          periodLength,
+          days,
         );
         var bOhlcLengthPercent = b.getOHLCLengthPercent(
           periodUnit,
-          periodLength,
+          days,
         );
         return aOhlcLengthPercent.compareTo(bOhlcLengthPercent);
       });
@@ -327,8 +327,8 @@ class EtfDataSource extends DataGridSource {
     } else if (columnName == collTurnover) {
       // var etfs = List<ETF>.from(this.etfs);
       etfs.sort((a, b) {
-        var aTurnover = a.getTurnover(periodUnit, periodLength);
-        var bTurnover = b.getTurnover(periodUnit, periodLength);
+        var aTurnover = a.getTurnover(periodUnit, days);
+        var bTurnover = b.getTurnover(periodUnit, days);
         return aTurnover.compareTo(bTurnover);
       });
       var index = etfs.indexWhere(
@@ -339,8 +339,8 @@ class EtfDataSource extends DataGridSource {
       color = Colors.red.myWithOpacity(percent);
     } else if (columnName == collChange) {
       etfs.sort((a, b) {
-        var aChange = a.getChange(periodUnit, periodLength);
-        var bChange = b.getChange(periodUnit, periodLength);
+        var aChange = a.getChangeV2(periodUnit, days);
+        var bChange = b.getChangeV2(periodUnit, days);
         return aChange.compareTo(bChange);
       });
 
@@ -349,10 +349,10 @@ class EtfDataSource extends DataGridSource {
             etf.symbol == (row.getCells().first.value as (String, String)).$2,
       );
 
-      if (etfs[index].getChange(periodUnit, periodLength) == 0) {
-      } else if (etfs[index].getChange(periodUnit, periodLength) > 0) {
+      if (etfs[index].getChangeV2(periodUnit, days) == 0) {
+      } else if (etfs[index].getChangeV2(periodUnit, days) > 0) {
         etfs = etfs
-            .where((etf) => etf.getChange(periodUnit, periodLength) > 0)
+            .where((etf) => etf.getChangeV2(periodUnit, days) > 0)
             .toList();
         var redCount = etfs.length;
         var index = etfs.indexWhere(
@@ -364,7 +364,7 @@ class EtfDataSource extends DataGridSource {
         color = Colors.red.myWithOpacity(percent);
       } else {
         etfs = etfs
-            .where((etf) => etf.getChange(periodUnit, periodLength) < 0)
+            .where((etf) => etf.getChangeV2(periodUnit, days) < 0)
             .toList();
 
         var greenCount = etfs.length;

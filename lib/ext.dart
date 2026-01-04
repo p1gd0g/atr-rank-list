@@ -8,3 +8,9 @@ extension ColorExtensions on Color {
     return withAlpha((alpha * 255).toInt());
   }
 }
+
+extension DateTimeExtensions on DateTime {
+  String toShortDateString() {
+    return '$year-$month-$day';
+  }
+}
