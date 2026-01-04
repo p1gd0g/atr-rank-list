@@ -81,10 +81,6 @@ void main() {
                     child: Text('过去 28 个交易日'),
                   ),
 
-                  // DropdownMenuItem(
-                  //   value: (60, Period.day),
-                  //   child: Text('过去 60 个交易日'),
-                  // ),
                   DropdownMenuItem(enabled: false, child: const Divider()),
 
                   /// 按小时计算
@@ -99,6 +95,22 @@ void main() {
                   DropdownMenuItem(
                     value: (5 * hoursInDay, Period.hour),
                     child: Text('过去 5 个交易日（小时精度）'),
+                  ),
+
+                  DropdownMenuItem(enabled: false, child: const Divider()),
+
+                  /// 按分钟计算
+                  DropdownMenuItem(
+                    value: (1 * minutesInDay, Period.minute),
+                    child: Text('过去 1 个交易日（分钟精度）'),
+                  ),
+                  DropdownMenuItem(
+                    value: (2 * minutesInDay, Period.minute),
+                    child: Text('过去 2 个交易日（分钟精度）'),
+                  ),
+                  DropdownMenuItem(
+                    value: (3 * minutesInDay, Period.minute),
+                    child: Text('过去 3 个交易日（分钟精度）'),
                   ),
                 ],
                 onChanged: (value) {

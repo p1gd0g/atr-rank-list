@@ -1,8 +1,11 @@
+import 'package:get/get.dart';
+
 const field_id = 'id';
 const field_symbol = 'symbol';
 const field_name = 'name';
 const field_cs1000Hour = 'cs_1000_hour';
 const field_cs1000Day = 'cs_1000_day';
+const field_cs1000Minute = 'cs_1000_minute';
 const field_updated = 'updated';
 const field_t0 = 't0';
 
@@ -15,6 +18,7 @@ class ETF {
 
   List<Candlestick>? cs1000Hour;
   List<Candlestick>? cs1000Day;
+  List<Candlestick>? cs1000Minute;
 
   late DateTime updateTime;
 
@@ -39,6 +43,11 @@ class ETF {
           .map((e) => Candlestick.fromMap(e))
           .toList();
     }
+    if (map[field_cs1000Minute] != null) {
+      cs1000Minute = (map[field_cs1000Minute] as List)
+          .map((e) => Candlestick.fromMap(e))
+          .toList();
+    }
   }
 
   double getChange(Period period, int length) {
@@ -60,24 +69,50 @@ class ETF {
       return cs1000Hour ?? [];
     } else if (period == Period.day) {
       return cs1000Day ?? [];
+    } else if (period == Period.minute) {
+      return cs1000Minute ?? [];
     } else {
       return [];
     }
   }
 
+  (List<Candlestick>, Candlestick?) getListV2(Period period, int day) {
+    final list = switch (period) {
+      Period.hour => cs1000Hour,
+      Period.day => cs1000Day,
+      Period.minute => cs1000Minute,
+    };
+
+    if (list == null || list.isEmpty) {
+      return ([], null);
+    }
+
+    final lastDateTime = list.last.time!;
+
+    var listResult = <Candlestick>[];
+    Candlestick? prevCs;
+
+    for (var i = 0; i < list.length; i++) {
+      final cs = list.reversed.elementAt(i);
+      final csDateTime = cs.time!;
+      final difference = lastDateTime.difference(csDateTime).inDays;
+      if (difference < day) {
+        listResult.add(cs);
+      } else {
+        prevCs = cs;
+        break;
+      }
+    }
+
+    Get.log(
+      'getListV2: period=$period, day=$day, listResult.length=${listResult.length}, prevCs=$prevCs',
+    );
+
+    return (listResult, prevCs);
+  }
+
   double getHigh(Period period, int length) {
     List<Candlestick> csList = getList(period);
-    // if (period == Period.hour) {
-    //   if (cs1000Hour == null || cs1000Hour!.length < length) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Hour!;
-    // } else {
-    //   if (cs1000Day == null || cs1000Day!.length < length) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Day!;
-    // }
 
     double high = csList[csList.length - length].high ?? 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -115,17 +150,6 @@ class ETF {
 
   double getATR(Period period, int length) {
     List<Candlestick> csList = getList(period);
-    // if (period == Period.hour) {
-    //   if (cs1000Hour == null || cs1000Hour!.length < length + 1) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Hour!;
-    // } else {
-    //   if (cs1000Day == null || cs1000Day!.length < length + 1) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Day!;
-    // }
 
     double atr = 0.0;
     for (int i = csList.length - length; i < csList.length; i++) {
@@ -143,17 +167,6 @@ class ETF {
 
   double getATRPercent(Period period, int length) {
     List<Candlestick> csList = getList(period);
-    // if (period == Period.hour) {
-    //   if (cs1000Hour == null || cs1000Hour!.isEmpty) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Hour!;
-    // } else {
-    //   if (cs1000Day == null || cs1000Day!.isEmpty) {
-    //     return 0.0;
-    //   }
-    //   csList = cs1000Day!;
-    // }
 
     double atr = getATR(period, length);
     double basePrice = csList.last.close ?? 0.0;
@@ -212,6 +225,7 @@ class ETF {
 enum Period { minute, hour, day }
 
 const int hoursInDay = 5;
+const int minutesInDay = 240;
 
 class Candlestick {
   DateTime? time;
