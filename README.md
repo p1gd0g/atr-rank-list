@@ -3,7 +3,7 @@
 set version;
 
 ```
-$ENV:build_vsn='0.14.0'
+$ENV:build_vsn='0.14.1'
 ```
 
 build web:
