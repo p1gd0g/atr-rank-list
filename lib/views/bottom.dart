@@ -47,6 +47,17 @@ class Bottom extends StatelessWidget {
               value: 2,
               child: Row(
                 children: [
+                  Icon(Icons.link),
+                  SizedBox(width: 8),
+                  Text('USDer 美元/人民币理财对比'),
+                ],
+              ),
+              onTap: () => launchUrlString('https://u.p1gd0g.cc'),
+            ),
+            PopupMenuItem(
+              value: 3,
+              child: Row(
+                children: [
                   Icon(Icons.account_circle),
                   SizedBox(width: 8),
                   Text('关注作者 @p1gd0g'),
