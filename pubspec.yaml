@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_datagrid: ^31.1.19
   url_launcher: ^6.3.2
   syncfusion_flutter_gauges: ^31.2.12
+  forui: ^0.17.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:myapp/ext.dart';
 
 const field_id = 'id';
