@@ -27732,7 +27732,7 @@ h.aL()
 h.aeD(g,g,m)
 q.fr$!==$&&A.ay()
 q.fr$=h
-i=h}q.a89(new A.Gb(k,new A.BP(s,"ATRx - ETF \u6ce2\u52a8\u7387\u6392\u540d",r,!1,new A.aGG(),g),j,i,g))
+i=h}q.a89(new A.Gb(k,new A.BP(s,"ATRx - ETF \u6ce2\u52a8\u7387\u5bf9\u6bd4",r,!1,new A.aGG(),g),j,i,g))
 q.GR()},
 aGD:function aGD(){},
 aGG:function aGG(){},
@@ -113767,7 +113767,7 @@ B.aaV=new A.fe("\u6700\u9ad8",null,null,null,null,null,null,null,null,null)
 B.aaW=new A.fe("ATR%",null,B.e2,null,null,null,null,null,null,null)
 B.aaX=new A.fe("\u4ef7\u683c",null,null,null,null,null,null,null,null,null)
 B.aaY=new A.fe("OHLC\u6b65\u957f",null,null,null,null,null,null,null,null,null)
-B.aaZ=new A.fe("ATRx - ETF \u6ce2\u52a8\u7387\u6392\u540d",null,B.e2,null,null,null,null,null,null,null)
+B.aaZ=new A.fe("ATRx - ETF \u6ce2\u52a8\u7387\u5bf9\u6bd4",null,B.e2,null,null,null,null,null,null,null)
 B.ab_=new A.fe("\u6210\u4ea4\u989d",null,null,null,null,null,null,null,null,null)
 B.ab0=new A.fe("OHLC\u6b65\u957f%",null,B.e2,null,null,null,null,null,null,null)
 B.ab1=new A.fe("\u66f4\u65b0\u65f6\u95f4",null,null,null,null,null,null,null,null,null)
