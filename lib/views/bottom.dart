@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class Bottom extends StatelessWidget {
@@ -10,68 +11,90 @@ class Bottom extends StatelessWidget {
       mainAxisAlignment: .spaceBetween,
       crossAxisAlignment: .center,
       children: [
-        // TextButton.icon(
-        //   onPressed: () =>
-        //       launchUrlString('https://x.p1gd0g.cc/assets/assets/mp.jpg'),
-        //   label: Text('关注作者 @p1gd0g'),
-        //   icon: Icon(Icons.account_circle),
-        // ),
-        TextButton.icon(
-          onPressed: () => launchUrlString(
+        FButton(
+          style: FButtonStyle.ghost(),
+          onPress: () => launchUrlString(
             'https://mp.weixin.qq.com/s/JYESvqKBXMbGTPbzuhw39w',
           ),
-          label: Text('指标解释'),
-          icon: Icon(Icons.help),
+          prefix: Icon(FIcons.circleQuestionMark),
+          child: Text('指标解释'),
         ),
-        // TextButton.icon(
-        //   onPressed: () => launchUrlString('https://x.p1gd0g.cc'),
-        //   label: Text('Gridder 网格交易测试工具'),
-        //   icon: Icon(Icons.link),
+
+        // PopupMenuButton<int>(
+        //   itemBuilder: (context) => [
+        //     PopupMenuItem(
+        //       value: 1,
+        //       child: Row(
+        //         children: [
+        //           Icon(Icons.link),
+        //           SizedBox(width: 8),
+        //           Text('Gridder 网格交易测试工具'),
+        //         ],
+        //       ),
+        //       onTap: () => launchUrlString('https://x.p1gd0g.cc'),
+        //     ),
+        //     PopupMenuItem(
+        //       value: 2,
+        //       child: Row(
+        //         children: [
+        //           Icon(Icons.link),
+        //           SizedBox(width: 8),
+        //           Text('USDer 美元/人民币理财对比'),
+        //         ],
+        //       ),
+        //       onTap: () => launchUrlString('https://u.p1gd0g.cc'),
+        //     ),
+        //     PopupMenuItem(
+        //       value: 3,
+        //       child: Row(
+        //         children: [
+        //           Icon(Icons.account_circle),
+        //           SizedBox(width: 8),
+        //           Text('关注作者 @p1gd0g'),
+        //         ],
+        //       ),
+        //       onTap: () => launchUrlString(
+        //         'https://mp.weixin.qq.com/s/yoFS-PvjhuvyNDBxZNO9Vg',
+        //       ),
+        //     ),
+        //   ],
+        //   child: Row(
+        //     mainAxisAlignment: .center,
+        //     crossAxisAlignment: .center,
+        //     children: [Icon(Icons.more_vert), Text('更多'), SizedBox(width: 8)],
+        //   ),
         // ),
-        // dropdown menu for Gridder and 关注作者
-        PopupMenuButton<int>(
-          // icon: Icon(Icons.more_vert),
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 1,
-              child: Row(
-                children: [
-                  Icon(Icons.link),
-                  SizedBox(width: 8),
-                  Text('Gridder 网格交易测试工具'),
-                ],
-              ),
-              onTap: () => launchUrlString('https://x.p1gd0g.cc'),
-            ),
-            PopupMenuItem(
-              value: 2,
-              child: Row(
-                children: [
-                  Icon(Icons.link),
-                  SizedBox(width: 8),
-                  Text('USDer 美元/人民币理财对比'),
-                ],
-              ),
-              onTap: () => launchUrlString('https://u.p1gd0g.cc'),
-            ),
-            PopupMenuItem(
-              value: 3,
-              child: Row(
-                children: [
-                  Icon(Icons.account_circle),
-                  SizedBox(width: 8),
-                  Text('关注作者 @p1gd0g'),
-                ],
-              ),
-              onTap: () =>
-                  launchUrlString('https://mp.weixin.qq.com/s/yoFS-PvjhuvyNDBxZNO9Vg'),
+        FPopoverMenu.tiles(
+          menu: [
+            FTileGroup(
+              children: [
+                FTile(
+                  title: Text('Gridder 网格交易测试工具'),
+                  onPress: () => launchUrlString('https://x.p1gd0g.cc'),
+                ),
+                FTile(
+                  title: Text('USDer 美元/人民币理财对比'),
+                  onPress: () => launchUrlString('https://u.p1gd0g.cc'),
+                ),
+                FTile(
+                  title: Text('关注作者 @p1gd0g'),
+                  onPress: () => launchUrlString(
+                    'https://mp.weixin.qq.com/s/yoFS-PvjhuvyNDBxZNO9Vg',
+                  ),
+                ),
+              ],
             ),
           ],
-          child: Row(
-            mainAxisAlignment: .center,
-            crossAxisAlignment: .center,
-            children: [Icon(Icons.more_vert), Text('更多'), SizedBox(width: 8)],
-          ),
+          builder: (context, value, child) {
+            return FButton(
+              style: FButtonStyle.ghost(),
+              prefix: Icon(FIcons.ellipsisVertical),
+              child: Text('更多'),
+              onPress: () {
+                value.toggle();
+              },
+            );
+          },
         ),
       ],
     );
