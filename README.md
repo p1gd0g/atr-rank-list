@@ -1,9 +1,9 @@
 ## build
 
-set version;
+set version:
 
 ```
-$ENV:build_vsn='0.14.4'
+$ENV:build_vsn='0.15.0'
 ```
 
 build web:
@@ -24,5 +24,5 @@ dart run flutter_launcher_icons
 ## refresh data
 
 ```
-curl -v 'https://update.y.p1gd0g.cc'
+curl -v 'https://update.y.p1gd0g.com'
 ```
